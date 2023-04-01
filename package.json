@@ -1,0 +1,11 @@
+{
+  "name": "countrycode.js",
+  "version": "1.0.0",
+  "description": "Country code, Flags, Timezone",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Elmer T Alluad Jr",
+  "license": "MIT"
+}
