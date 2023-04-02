@@ -22,37 +22,24 @@ const builds = {
         target: 'node',
         env: 'production',
         entry: './src/countrycode.ts',
-        // productionSourceMap: true,
-        // devtool: '#source-map',
-        // bundleAnalyzerReport: process.env.npm_config_report,
     },
     development: {
         mode: 'development',
         target: 'node',
         env: 'development',
         entry: './src/countrycode.ts',
-        // productionSourceMap: false,
-        // devtool:
-        // bundleAnalyzerReport: process.env.npm_config_report,
     },
     test: {
         mode: 'test',
         target: 'node',
         env: 'test',
         entry: './src/countrycode.ts',
-
-        // productionSourceMap: true,
-        // devtool: '#source-map',
-        // bundleAnalyzerReport: process.env.npm_config_report,
     },
     compiler: {
         mode: 'compiler',
         target: 'node',
         env: 'compiler',
         entry: './src/countrycode.ts',
-        // productionSourceMap: true,
-        // devtool: '#source-map',
-        // bundleAnalyzerReport: process.env.npm_config_report,
     },
 };
 
@@ -60,19 +47,25 @@ function getConfig(name) {
     const opts = builds[name];
 
     const vars = {
-        __VERSION__: version,
+        PRODUCTION: JSON.stringify(process.argv[5] === '--env' ? false : true),
+        VERSION: version,
         __DEV__: process.env.NODE_ENV !== 'production',
         __PROD__: process.env.NODE_ENV === 'production',
         __TEST__: process.env.NODE_ENV === 'test',
     };
 
+    if (opts.env) {
+        vars.__DEV__ = JSON.stringify(
+            process.argv[5] === '--env' ? false : true
+        );
+    }
+
     const config = Object.assign(
         {
-            // entry: './src/countrycode.ts',
             output: {
                 path: path.resolve(__dirname, '../dist'),
                 filename: '[name].js',
-                publicPath: 'dist/',
+                publicPath: 'dist',
             },
             resolve: {
                 extensions: ['.ts', '.js'],
@@ -97,11 +90,6 @@ function getConfig(name) {
         opts
     );
 
-    if (opts.env) {
-        vars['process.env.NODE_ENV'] = JSON.stringify(opts.env);
-        vars.__DEV__ = opts.env !== 'production';
-    }
-
     Object.defineProperty(config, '_name', {
         enumerable: false,
         value: name,
@@ -112,7 +100,7 @@ function getConfig(name) {
     return config;
 }
 
-if (process.env.TARGET) {
+if (process.env.npm_lifecycle_script.split(' ')[4]) {
     module.exports = (env) => getConfig(env.TARGET);
 } else {
     exports.getBuild = getConfig;

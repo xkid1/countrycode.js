@@ -8,16 +8,12 @@ if (!fs.existsSync(path.resolve(__dirname, '../dist'))) {
 
 let builds = require('./config').getAllBuilds();
 
-// filter builds via command line arg
 if (builds) {
     builds = builds.filter((b) => {
         return b._name.indexOf('production') > -1;
     });
 }
-// const filters = process.argv[2].split(',');
-// builds = builds.filter((b) => {
-//     return filters.some((f) => b._name.indexOf(f) > -1);
-// });
+
 build(builds);
 
 function build(builds) {
