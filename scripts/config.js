@@ -3,9 +3,6 @@ const webpack = require('webpack');
 const fs = require('fs');
 
 const version = process.env.VERSION || require('../package.json').version;
-const fileEntry = fs
-    .readdirSync('./src')
-    .reduce((acc, v) => ({ ...acc, [v]: `./src/${v}` }), {});
 
 const banner =
     '/*!\n' +
@@ -19,59 +16,46 @@ const banner =
 const builds = {
     production: {
         mode: 'production',
-        target: 'node',
+        target: 'web',
         env: 'production',
-        entry: './src/countrycode.ts',
+        entry: './src/main.ts',
     },
     development: {
         mode: 'development',
-        target: 'node',
+        target: 'web',
         env: 'development',
-        entry: './src/countrycode.ts',
+        entry: './src/main.ts',
     },
     test: {
         mode: 'test',
-        target: 'node',
+        target: 'web',
         env: 'test',
-        entry: './src/countrycode.ts',
-    },
-    compiler: {
-        mode: 'compiler',
-        target: 'node',
-        env: 'compiler',
-        entry: './src/countrycode.ts',
+        entry: './src/main.ts',
     },
 };
 
 function getConfig(name) {
     const opts = builds[name];
-
     const vars = {
-        PRODUCTION: JSON.stringify(process.argv[5] === '--env' ? false : true),
+        PRODUCTION: JSON.stringify(name === 'development' ? false : true),
         VERSION: version,
         __DEV__: process.env.NODE_ENV !== 'production',
         __PROD__: process.env.NODE_ENV === 'production',
         __TEST__: process.env.NODE_ENV === 'test',
     };
 
-    if (opts.env) {
-        vars.__DEV__ = JSON.stringify(
-            process.argv[5] === '--env' ? false : true
-        );
-    }
+    vars.__DEV__ = JSON.stringify(name === 'development' ? false : true);
 
     const config = Object.assign(
         {
             output: {
-                path: path.resolve(__dirname, '../dist'),
+                path: path.resolve(__dirname, '../dist/src'),
                 filename: '[name].js',
                 publicPath: 'dist',
+                globalObject: 'this',
             },
             resolve: {
                 extensions: ['.ts', '.js'],
-                alias: {
-                    '@': path.resolve(__dirname, '../src'),
-                },
             },
             module: {
                 rules: [
@@ -100,8 +84,10 @@ function getConfig(name) {
     return config;
 }
 
-if (process.env.npm_lifecycle_script.split(' ')[4]) {
-    module.exports = (env) => getConfig(env.TARGET);
+const target = process.argv[process.argv.length - 1];
+
+if (target == 'development') {
+    module.exports = () => getConfig(target);
 } else {
     exports.getBuild = getConfig;
     exports.getAllBuilds = () => Object.keys(builds).map(getConfig);
