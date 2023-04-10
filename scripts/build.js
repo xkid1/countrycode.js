@@ -1,21 +1,21 @@
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
+const target = process.argv[process.argv.length - 1];
 
 if (!fs.existsSync(path.resolve(__dirname, '../dist'))) {
     fs.mkdirSync(path.resolve(__dirname, '../dist'));
 }
 
 let builds = require('./config').getAllBuilds();
-
-if (builds) {
+// filter builds via command line arg
+if (process.argv[2]) {
     builds = builds.filter((b) => {
-        return b._name.indexOf('production') > -1;
+        return b._name.indexOf(process.argv[2]) > -1;
     });
 }
 
 build(builds);
-
 function build(builds) {
     let built = 0;
     const total = builds.length;
@@ -60,15 +60,20 @@ function buildEntry(config, cb) {
         }
 
         const output = stats.toJson().assetsByChunkName.main;
+
         const jsRE = /\.js$/;
+        console.log(
+            'fsdfsdf',
+            output.filter((file) => jsRE.test(file))
+        );
         // // const cssRE = /\.css$/;
         const assets = {
             js: output.filter((file) => jsRE.test(file)),
             // css: output.filter((file) => cssRE.test(file)),
         };
-
-        const dest = path.resolve(__dirname, '../dist', config._name + '.json');
-        write(dest, JSON.stringify(assets, null, 2), true).then(cb);
+        // console.log('assets', assets);
+        // const dest = path.resolve(__dirname, '../dist');
+        // write(dest, JSON.stringify(assets, null, 2), true).then(cb);
     });
 }
 
@@ -88,15 +93,18 @@ function write(dest, code, zip) {
             fs.mkdirSync(path.resolve(__dirname, '../dist'));
         }
 
-        fs.writeFile(dest, code, (err) => {
-            if (err) return reject(err);
-            if (zip) {
-                const zipped = (code.length / 1024).toFixed(2) + 'kb';
-                console.log(blue(dest + ' (' + zipped + ')'));
-            } else {
-                report();
-            }
-        });
+        fs.cpSync(code, dest);
+
+        // fs.writeFile(dest, code, (err) => {
+        //     if (err) return reject(err);
+        //     if (zip) {
+        //         const zipped = (code.length / 1024).toFixed(2) + 'kb';
+        //         console.log(blue(dest + ' (' + zipped + ')'));
+        //         console.log('zipped');
+        //     } else {
+        //         report();
+        //     }
+        // });
     });
 }
 
