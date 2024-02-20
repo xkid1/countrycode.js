@@ -2,13 +2,12 @@
   "name": "countrycode.js",
   "version": "1.0.0",
   "description": "Country code, Flags, Timezone",
-  "main": "dist/main.js",
-  "module": "dist/main.js",
+  "main": "dist/src/main.js",
+  "module": "dist/src/main.js",
   "scripts": {
-    "dev": "webpack --watch --config ./scripts/config.js --env TARGET=development",
-    "dev:compiler": "webpack --config ./scripts/config.js --env TARGET:compiler",
-    "build": "node ./scripts/build.js",
-    "release": "node ./scripts/release.js",
+    "dev": "webpack --watch --config ./scripts/config.js --env  development",
+    "build": "node ./scripts/build.js production",
+    "release": "node ./scripts/release.js release",
     "test": "",
     "lint": "eslint --ext .js,.ts ."
   },
