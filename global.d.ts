@@ -1,18 +1,14 @@
 /**
- * Country Code
+ * Time zone
  *
  * @version 1.0.0
  * @since 1.0.0
  */
-declare module 'countrycode' {
-    type CountryCodeType = typeof CountryCode & {
-        new (param: string | undefined | null): ProxyHandler<CountryCode>;
-    };
-    class CountryCode {
-        constructor(param: string | undefined | null);
-    }
-
-    const countrycode: CountryCodeType;
-
-    export = countrycode;
+declare module 'tz' {
+  /**
+   * Get the local time
+   * @param tzi
+   * @returns {string} local time
+   */
+  function getLocalTime(tzi: string | undefined | null): string;
 }
