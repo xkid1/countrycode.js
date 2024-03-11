@@ -1,7 +1,7 @@
-import { FormatDateTime } from '~/lib';
+import { FormatDateTime } from '../lib';
 import base from '../../db/iso/tz.json';
 
-class TimeZone {
+class TimeZoneC {
   private base: Array<any> = base;
   private instanceOfFormatDateTime: FormatDateTime;
   constructor() {
@@ -132,4 +132,12 @@ class TimeZone {
   }
 }
 
-export default TimeZone;
+const timeZone = new TimeZoneC();
+
+const tz = new Proxy(timeZone, {
+  get(target, prop) {
+    return target[prop];
+  },
+});
+
+export default tz;

@@ -1,5 +1,3 @@
-import TimeZone from './tz/tz';
+import tz from './tz/tz';
 
-const tz = new TimeZone();
-
-module.exports = tz;
+export default tz;

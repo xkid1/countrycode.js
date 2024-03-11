@@ -1,21 +1,17 @@
 {
-  "name": "countrycode.js",
+  "name": "tz",
   "version": "1.0.0",
   "description": "Country code, Flags, Timezone",
-  "main": "dist/src/main.js",
-  "module": "dist/src/main.js",
+  "main": "./dist/src/main.js",
+  "module": "./dist/src/main.js",
   "scripts": {
-    "dev": "webpack --watch --config ./scripts/config.js --env  development",
+    "dev": "node ./scripts/build.js development",
     "build": "node ./scripts/build.js production",
-    "release": "node ./scripts/release.js release",
     "test": "",
     "lint": "eslint --ext .js,.ts ."
   },
   "author": "Elmer T Alluad Jr",
   "license": "MIT",
-  "publishConfig": {
-    "@xkid1:registry": "https://npm.pkg.github.com"
-  },
   "engines": {
     "node": ">=20.11.0"
   },
@@ -23,5 +19,8 @@
     "ts-loader": "^9.4.2",
     "webpack": "^5.77.0",
     "webpack-cli": "^5.0.1"
-  }
+  },
+  "files": [
+    "./dist/"
+  ]
 }
